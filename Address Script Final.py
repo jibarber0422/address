@@ -8,7 +8,6 @@ shortened_output = r'C:\Users\jbarber\Desktop\addresses_shortened.csv'
 alert_output = r'C:\Users\jbarber\Desktop\addresses_alerts.csv'
 duplicate_output = r'C:\Users\jbarber\Desktop\duplicates.csv'
 
-# === REPLACEMENT RULES ===
 abbrev_replacements = {
     "north": "N", "n": "N", "south": "S", "s": "S",
     "east": "E", "e": "E", "west": "W", "w": "W",
@@ -136,7 +135,6 @@ directional_checks = [
     }
 ]
 
-# === FUNCTION: Normalize Address ===
 def normalize_address(addr):
     if not addr:
         return addr
@@ -156,7 +154,6 @@ def check_directional_issues(addr, city, row_num):
             issues.append({'row': row_num, 'issue': f"{check['name']} missing '{check['required_prefix']}' prefix", 'address': addr})
     return issues
 
-# === PROCESSING: Shorten + Alert ===
 alerts = []
 try:
     with open(input_file, newline='', encoding='utf-8') as infile, \
@@ -190,9 +187,8 @@ try:
     print(f"✔ Address normalization done. {len(alerts)} alerts written to: {alert_output}")
 
 except Exception as e:
-    print(f"❌ Error during processing: {e}")
-
-# === DUPLICATION CHECK ===
+    print(f"Error during processing: {e}")
+    
 try:
     df = pd.read_csv(shortened_output)
     if 'address' not in df.columns or 'name' not in df.columns:
@@ -206,7 +202,7 @@ try:
         duplicates.to_csv(duplicate_output, index=False)
         print(f"✔ Found {len(duplicates)} duplicates saved to: {duplicate_output}")
     else:
-        print("✅ No duplicates found.")
+        print("No duplicates found.")
 
 except Exception as e:
-    print(f"❌ Duplication check error: {e}")
+    print(f"Duplication check error: {e}")
